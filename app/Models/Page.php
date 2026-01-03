@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Blog extends Model
+class Page extends Model
 {
     use HasFactory;
 
@@ -14,5 +14,7 @@ class Blog extends Model
         'slug',
         'content',
         'featured_image',
+        'seo_title',
+        'seo_description',
     ];
 }
