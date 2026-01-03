@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Filament\Forms; // <--- Make sure this is imported
 
 class PageResource extends Resource
 {
@@ -22,7 +23,21 @@ class PageResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return PageForm::configure($schema);
+        return PageForm::configure($schema)
+            ->schema([
+                Forms\Components\TextInput::make('hero_title')->required()->label('Hero Title'),
+                Forms\Components\TextInput::make('hero_subtitle')->required()->label('Hero Subtitle'),
+                Forms\Components\TextInput::make('host_cta_text')->required()->label('Host Button Text'),
+                Forms\Components\TextInput::make('host_cta_link')->required()->label('Host Button Link'),
+                Forms\Components\TextInput::make('agent_cta_text')->required()->label('Agent Button Text'),
+                Forms\Components\TextInput::make('agent_cta_link')->required()->label('Agent Button Link'),
+                Forms\Components\FileUpload::make('hero_background')
+                    ->image()
+                    ->directory('homepage')
+                    ->label('Hero Background'),
+                Forms\Components\TextInput::make('host_earnings_text')->label('Host Earnings Text'),
+                Forms\Components\TextInput::make('agent_commission_text')->label('Agent Commission Text'),
+            ]);
     }
 
     public static function table(Table $table): Table

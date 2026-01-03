@@ -1,57 +1,114 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ $homepage->hero_title ?? 'Poppo Live' }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Reset & font */
+        body, html { margin:0; padding:0; font-family: 'Poppins', sans-serif; }
 
-@section('content')
+        /* Hero section */
+        .hero {
+            position: relative; /* needed for overlay */
+            background: url('{{ asset($homepage->hero_background ?? "images/default-hero.jpg") }}') no-repeat center center;
+            background-size: cover;
+            height: 100vh;
+            color: white;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
 
-@if($homepage)
-<!-- Hero Section with Video Background -->
-<section style="position: relative; height: 90vh; overflow: hidden; display:flex; align-items:center; justify-content:center; text-align:center; color:white;">
-    <!-- Video -->
-    <video autoplay muted loop style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:0;">
-        <source src="{{ asset('storage/' . $homepage->hero_video) }}" type="video/mp4">
-    </video>
+        /* Dark overlay */
+        .hero .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5); /* 50% dark */
+            z-index: 0;
+        }
 
-    <!-- Overlay -->
-    <div style="position:absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); z-index:1;"></div>
+        /* Text and buttons above overlay */
+        .hero h1,
+        .hero p,
+        .hero .cta-buttons {
+            position: relative;
+            z-index: 1;
+        }
 
-    <!-- Foreground Content -->
-    <div style="position: relative; z-index:2; max-width:700px;">
-        <h1 style="font-size:3rem; font-weight:bold; margin-bottom:20px;">{{ $homepage->hero_title }}</h1>
-        <p style="font-size:1.3rem; margin-bottom:30px;">{!! $homepage->hero_subtitle !!}</p>
+        .hero h1 { 
+            font-size: 4rem; 
+            margin: 0; 
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+        }
+        .hero p { 
+            font-size: 1.5rem; 
+            margin: 20px 0 50px 0; 
+            text-shadow: 1px 1px 8px rgba(0,0,0,0.5);
+        }
 
-        <div style="display:flex; gap:20px; flex-wrap:wrap; justify-content:center;">
-            <a href="{{ $homepage->host_cta_link }}" target="_blank"
-               style="background:#EC4899; color:white; font-weight:bold; padding:15px 35px; border-radius:50px; font-size:1.1rem; box-shadow:0 5px 15px rgba(236,72,153,0.4); text-decoration:none; transition:0.3s;">Be a Host</a>
-            <a href="{{ $homepage->agent_cta_link }}" target="_blank"
-               style="background:#F472B6; color:white; font-weight:bold; padding:15px 35px; border-radius:50px; font-size:1.1rem; box-shadow:0 5px 15px rgba(244,114,182,0.4); text-decoration:none; transition:0.3s;">Be an Agent</a>
-        </div>
+        /* CTA Buttons */
+        .cta-buttons a {
+            display: inline-block;
+            padding: 18px 40px;
+            margin: 0 15px;
+            font-size: 1.3rem;
+            color: white;
+            background: #ff66b2;
+            border-radius: 50px;
+            text-decoration: none;
+            box-shadow: 0 5px 15px rgba(255,102,178,0.5);
+            transition: 0.3s;
+        }
+        .cta-buttons a:hover {
+            background: #ff3399;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255,51,153,0.6);
+        }
+
+        /* Earnings section */
+        .earnings {
+            background: #fff0f5;
+            padding: 60px 20px;
+            text-align: center;
+            color: #333;
+        }
+        .earnings h2 { margin-bottom: 20px; font-size: 2.5rem; }
+        .earnings p { font-size: 1.3rem; margin: 12px 0; }
+
+        /* Responsive */
+        @media (max-width: 768px){
+            .hero h1 { font-size: 3rem; }
+            .hero p { font-size: 1.2rem; }
+            .cta-buttons a { padding: 15px 25px; font-size: 1.1rem; margin: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <!-- Overlay to darken the background -->
+    <div class="overlay"></div>
+
+    <h1>{{ $homepage->hero_title ?? 'Become a Live Host' }}</h1>
+    <p>{{ $homepage->hero_subtitle ?? 'Start earning with Poppo today' }}</p>
+    <div class="cta-buttons">
+        <a href="{{ $homepage->host_cta_link ?? '#' }}">{{ $homepage->host_cta_text ?? 'Be a Host' }}</a>
+        <a href="{{ $homepage->agent_cta_link ?? '#' }}">{{ $homepage->agent_cta_text ?? 'Be an Agent' }}</a>
     </div>
-</section>
+</div>
 
-<!-- Earnings Section -->
-<section style="padding:50px 20px; text-align:center; background:#FFF0F6; border-radius:15px; margin:50px auto; max-width:1000px;">
-    {!! $homepage->earnings_text !!}
-</section>
+<div class="earnings">
+    <h2>Why Join?</h2>
+    <p>{{ $homepage->host_earnings_text ?? 'Hosts can earn more than $1000 per week.' }}</p>
+    <p>{{ $homepage->agent_commission_text ?? 'Agents earn 20% commission for all hosts they add.' }}</p>
+</div>
 
-<!-- Latest Blogs Section -->
-<section style="max-width:1200px; margin:0 auto 50px; padding:0 20px;">
-    <h2 style="text-align:center; font-size:2rem; margin-bottom:30px; color:#111827;">Latest Blogs</h2>
-    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:25px;">
-        @foreach($latestBlogs as $blog)
-            <div style="border-radius:15px; overflow:hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.05); transition: transform 0.3s; background:white;">
-                @if($blog->featured_image)
-                    <img src="{{ asset('storage/' . $blog->featured_image) }}" alt="{{ $blog->title }}" style="width:100%; height:180px; object-fit:cover;">
-                @endif
-                <div style="padding:20px;">
-                    <h3 style="margin-top:0; font-size:1.3rem; color:#111827;">
-                        <a href="{{ route('blog.show', $blog->slug) }}" style="text-decoration:none; color:inherit;">{{ $blog->title }}</a>
-                    </h3>
-                    <p style="color:#6B7280;">{{ \Illuminate\Support\Str::limit(strip_tags($blog->content), 130) }}</p>
-                    <a href="{{ route('blog.show', $blog->slug) }}" style="color:#EC4899; font-weight:bold; text-decoration:none;">Read More →</a>
-                </div>
-            </div>
-        @endforeach
-    </div>
-</section>
-@endif
 
-@endsection
+</body>
+</html>
